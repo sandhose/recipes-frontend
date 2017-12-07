@@ -1,5 +1,5 @@
 import * as React from "react";
-import { render } from "react-dom";
+import ReactDOM from "react-dom";
 
 import ApolloClient from "apollo-client";
 import { HttpLink, InMemoryCache } from "apollo-client-preset";
@@ -14,9 +14,18 @@ const client = new ApolloClient({
   cache: new InMemoryCache().restore({})
 });
 
-render(
-  <ApolloProvider client={client}>
-    <App />
-  </ApolloProvider>,
-  document.getElementById("root")
-);
+const render = App =>
+  ReactDOM.render(
+    <ApolloProvider client={client}>
+      <App />
+    </ApolloProvider>,
+    document.getElementById("root")
+  );
+
+render(App);
+
+if (module.hot) {
+  module.hot.accept("./App", () => {
+    render(require("./App").default);
+  });
+}
