@@ -7,12 +7,15 @@ import ApolloClient from "apollo-client";
 import { HttpLink, InMemoryCache } from "apollo-client-preset";
 import { ApolloProvider } from "react-apollo";
 
+import { authLink } from "./auth";
 import App from "./App";
 
+const httpLink = new HttpLink({
+  uri: "/graphql"
+});
+
 const client = new ApolloClient({
-  link: new HttpLink({
-    uri: "/graphql"
-  }),
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache().restore({})
 });
 

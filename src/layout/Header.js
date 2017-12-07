@@ -56,10 +56,39 @@ const CategoriesDropdown = graphql(CATEGORIES_QUERY)(({ data }) => {
   );
 });
 
+const PROFILE_QUERY = gql`
+  query {
+    me {
+      fullName
+    }
+  }
+`;
+
+const ProfileItem = graphql(PROFILE_QUERY)(({ data }) => {
+  const { loading, error, me } = data;
+
+  if (loading) {
+    return <Menu.Item disabled>Loading…</Menu.Item>;
+  }
+
+  if (error) {
+    return <Menu.Item error>Error.</Menu.Item>;
+  }
+
+  if (me) {
+    return <Menu.Item link>{me.fullName}</Menu.Item>;
+  } else {
+    return <Menu.Item link>Login</Menu.Item>;
+  }
+});
+
 const Header = () => (
   <Menu pointing secondary>
     <Menu.Item header>Recipes.</Menu.Item>
     <CategoriesDropdown />
+    <Menu.Menu position="right">
+      <ProfileItem />
+    </Menu.Menu>
   </Menu>
 );
 
