@@ -12,6 +12,8 @@ import {
 } from "semantic-ui-react";
 import { Redirect } from "react-router-dom";
 
+import RecipeCard from "../components/RecipeCard";
+
 const PROFILE_QUERY = gql`
   query {
     me {
@@ -21,6 +23,20 @@ const PROFILE_QUERY = gql`
       biography
       recipes {
         totalCount
+        nodes {
+          id
+          name
+          description
+          serves
+          ingredients {
+            totalCount
+          }
+          categories: cat {
+            nodes {
+              name
+            }
+          }
+        }
       }
       fridge {
         totalCount
@@ -84,6 +100,10 @@ const Me = ({ data }) => {
             value={me.shoppingLists.totalCount}
           />
         </Statistic.Group>
+
+        <Card.Group itemsPerRow={1}>
+          {me.recipes.nodes.map(data => <RecipeCard {...data} />)}
+        </Card.Group>
       </Grid.Column>
     </Grid>
   );
