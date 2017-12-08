@@ -13,42 +13,26 @@ import {
 import { Redirect } from "react-router-dom";
 
 import RecipeCard from "../components/RecipeCard";
+import ProfileCard from "../components/ProfileCard";
+import ProfileStatistics from "../components/ProfileStatistics";
 
 const PROFILE_QUERY = gql`
   query {
     me {
       email
-      fullName
-      username
-      biography
+      ...ProfileCard
+      ...ProfileStatistics
       recipes {
-        totalCount
         nodes {
-          id
-          name
-          description
-          serves
-          ingredients {
-            totalCount
-          }
-          categories: cat {
-            nodes {
-              name
-            }
-          }
+          ...RecipeCard
         }
-      }
-      fridge {
-        totalCount
-      }
-      plannings {
-        totalCount
-      }
-      shoppingLists {
-        totalCount
       }
     }
   }
+
+  ${RecipeCard.fragments.entry}
+  ${ProfileCard.fragments.entry}
+  ${ProfileStatistics.fragments.entry}
 `;
 
 const Me = ({ data }) => {
@@ -81,25 +65,11 @@ const Me = ({ data }) => {
   return (
     <Grid>
       <Grid.Column width={4}>
-        <Card>
-          <Card.Content>
-            <Card.Header>{me.fullName}</Card.Header>
-            <Card.Meta>{me.username}</Card.Meta>
-            <Card.Description>{me.biography}</Card.Description>
-          </Card.Content>
-        </Card>
+        <ProfileCard {...me} />
       </Grid.Column>
 
       <Grid.Column width={10} floated="right">
-        <Statistic.Group widths={4}>
-          <Statistic label="recipes" value={me.recipes.totalCount} />
-          <Statistic label="items in fridge" value={me.fridge.totalCount} />
-          <Statistic label="plannings" value={me.plannings.totalCount} />
-          <Statistic
-            label="shopping lists"
-            value={me.shoppingLists.totalCount}
-          />
-        </Statistic.Group>
+        <ProfileStatistics {...me} />
 
         <Card.Group itemsPerRow={1}>
           {me.recipes.nodes.map(data => <RecipeCard {...data} />)}

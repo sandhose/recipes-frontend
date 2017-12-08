@@ -3,7 +3,7 @@ import gql from "graphql-tag";
 import { graphql, compose } from "react-apollo";
 import { Redirect } from "react-router-dom";
 
-import { Form, Container, Card, Button, Message } from "semantic-ui-react";
+import { Form, Card, Button, Message } from "semantic-ui-react";
 
 import { saveToken } from "../auth";
 
