@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Dropdown, Label } from "semantic-ui-react";
 
 import gql from "graphql-tag";
@@ -8,9 +9,11 @@ const CATEGORIES_QUERY = gql`
   query {
     rootCategories {
       nodes {
+        id
         name
         children {
           nodes {
+            id
             name
             recipes {
               totalCount
@@ -25,6 +28,7 @@ const CATEGORIES_QUERY = gql`
 const CategoriesDropdown = ({ data }) => {
   const { loading, error, rootCategories } = data;
 
+  // FIXME: submenu
   return (
     <Dropdown
       loading={loading}
@@ -41,8 +45,12 @@ const CategoriesDropdown = ({ data }) => {
               {name}
               <Dropdown>
                 <Dropdown.Menu>
-                  {children.nodes.map(({ name, recipes }, index) => (
-                    <Dropdown.Item key={index}>
+                  {children.nodes.map(({ id, name, recipes }, index) => (
+                    <Dropdown.Item
+                      key={index}
+                      as={Link}
+                      to={`/categories/${id}`}
+                    >
                       <Label>{recipes.totalCount}</Label>
                       {name}
                     </Dropdown.Item>

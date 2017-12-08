@@ -15,7 +15,7 @@ const RecipeCard = ({ id, name, description, serves, categories }) => (
       </Card.Header>
       <Card.Description>
         {/* TODO: fix line breaks */}
-        {description.split("\\n\\n").map(c => <p>{c}</p>)}
+        {description.split("\\n").map(c => <p>{c}</p>)}
       </Card.Description>
     </Card.Content>
     {/* TODO: timers */}
