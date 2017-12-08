@@ -52,7 +52,7 @@ class Login extends Component {
 
   render() {
     if (this.props.data.me) {
-      return <Redirect to="/" />;
+      return <Redirect to="/me" />;
     }
 
     const { username, password, error, loading } = this.state;

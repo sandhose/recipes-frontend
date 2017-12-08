@@ -25,32 +25,32 @@ const CATEGORIES_QUERY = gql`
 const CategoriesDropdown = ({ data }) => {
   const { loading, error, rootCategories } = data;
 
-  if (loading) {
-    return <Dropdown loading item pointing text="Categories" />;
-  }
-
-  if (error) {
-    return <Dropdown error disabled item pointing text="Categories" />;
-  }
-
   return (
-    <Dropdown item pointing text="Categories">
+    <Dropdown
+      loading={loading}
+      disabled={error}
+      error={error}
+      item
+      pointing
+      text="Categories"
+    >
       <Dropdown.Menu>
-        {rootCategories.nodes.map(({ name, children }, index) => (
-          <Dropdown.Item key={index}>
-            {name}
-            <Dropdown>
-              <Dropdown.Menu>
-                {children.nodes.map(({ name, recipes }, index) => (
-                  <Dropdown.Item key={index}>
-                    <Label>{recipes.totalCount}</Label>
-                    {name}
-                  </Dropdown.Item>
-                ))}
-              </Dropdown.Menu>
-            </Dropdown>
-          </Dropdown.Item>
-        ))}
+        {rootCategories &&
+          rootCategories.nodes.map(({ name, children }, index) => (
+            <Dropdown.Item key={index}>
+              {name}
+              <Dropdown>
+                <Dropdown.Menu>
+                  {children.nodes.map(({ name, recipes }, index) => (
+                    <Dropdown.Item key={index}>
+                      <Label>{recipes.totalCount}</Label>
+                      {name}
+                    </Dropdown.Item>
+                  ))}
+                </Dropdown.Menu>
+              </Dropdown>
+            </Dropdown.Item>
+          ))}
       </Dropdown.Menu>
     </Dropdown>
   );

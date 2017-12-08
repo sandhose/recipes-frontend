@@ -10,6 +10,7 @@ import {
   Grid,
   Statistic
 } from "semantic-ui-react";
+import { Redirect } from "react-router-dom";
 
 const PROFILE_QUERY = gql`
   query {
@@ -55,6 +56,10 @@ const Me = ({ data }) => {
         </Header>
       </Dimmer>
     );
+  }
+
+  if (!me) {
+    return <Redirect to="/login" />;
   }
 
   return (
