@@ -39,7 +39,7 @@ const Me = ({ data: { me } }) => (
       <ProfileStatistics {...me} />
 
       <Card.Group itemsPerRow={1}>
-        {me.recipes.nodes.map(data => <RecipeCard {...data} />)}
+        {me.recipes.nodes.map(RecipeCard)}
       </Card.Group>
     </Grid.Column>
   </Grid>
