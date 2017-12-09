@@ -1,8 +1,6 @@
 import * as React from "react";
 import ReactDOM from "react-dom";
-
 import { BrowserRouter } from "react-router-dom";
-
 import ApolloClient from "apollo-client";
 import { HttpLink, InMemoryCache } from "apollo-client-preset";
 import { ApolloProvider } from "react-apollo";
@@ -19,20 +17,21 @@ const client = new ApolloClient({
   cache: new InMemoryCache().restore({})
 });
 
-const render = App =>
+const render = NextApp => {
   ReactDOM.render(
     <BrowserRouter>
       <ApolloProvider client={client}>
-        <App />
+        <NextApp />
       </ApolloProvider>
     </BrowserRouter>,
     document.getElementById("root")
   );
+};
 
 render(App);
 
 if (module.hot) {
   module.hot.accept("./App", () => {
-    render(require("./App").default);
+    render(require("./App").default); // eslint-disable-line global-require
   });
 }

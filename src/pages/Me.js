@@ -2,8 +2,8 @@ import React from "react";
 import gql from "graphql-tag";
 import { compose } from "recompose";
 import { graphql } from "react-apollo";
-import { Card, Dimmer, Loader, Header, Icon, Grid } from "semantic-ui-react";
-import { Redirect } from "react-router-dom";
+import { propType } from "graphql-anywhere";
+import { Card, Grid } from "semantic-ui-react";
 
 import { renderWhileLoading, renderForError, needsLogin } from "../utils";
 import RecipeCard from "../components/RecipeCard";
@@ -44,6 +44,10 @@ const Me = ({ data: { me } }) => (
     </Grid.Column>
   </Grid>
 );
+
+Me.propTypes = {
+  data: propType(PROFILE_QUERY).isRequired
+};
 
 export default compose(
   needsLogin,

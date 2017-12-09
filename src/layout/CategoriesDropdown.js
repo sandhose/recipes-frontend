@@ -1,8 +1,9 @@
+import PropTypes from "prop-types";
 import React from "react";
 import { Link } from "react-router-dom";
 import { Dropdown, Label } from "semantic-ui-react";
-
 import gql from "graphql-tag";
+import { propType } from "graphql-anywhere";
 import { graphql } from "react-apollo";
 
 const CATEGORIES_QUERY = gql`
@@ -25,6 +26,21 @@ const CATEGORIES_QUERY = gql`
   }
 `;
 
+const SubcategoryItem = ({ id, name, recipes }) => (
+  <Dropdown.Item key={id} as={Link} to={`/categories/${id}`}>
+    <Label>{recipes.totalCount}</Label>
+    {name}
+  </Dropdown.Item>
+);
+
+SubcategoryItem.propTypes = {
+  id: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  recipes: PropTypes.shape({
+    totalCount: PropTypes.number.isRequired
+  }).isRequired
+};
+
 const CategoriesDropdown = ({ data }) => {
   const { loading, error, rootCategories } = data;
 
@@ -40,21 +56,12 @@ const CategoriesDropdown = ({ data }) => {
     >
       <Dropdown.Menu>
         {rootCategories &&
-          rootCategories.nodes.map(({ name, children }, index) => (
-            <Dropdown.Item key={index}>
+          rootCategories.nodes.map(({ id, name, children }) => (
+            <Dropdown.Item key={id}>
               {name}
               <Dropdown>
                 <Dropdown.Menu>
-                  {children.nodes.map(({ id, name, recipes }, index) => (
-                    <Dropdown.Item
-                      key={index}
-                      as={Link}
-                      to={`/categories/${id}`}
-                    >
-                      <Label>{recipes.totalCount}</Label>
-                      {name}
-                    </Dropdown.Item>
-                  ))}
+                  {children.nodes.map(SubcategoryItem)}
                 </Dropdown.Menu>
               </Dropdown>
             </Dropdown.Item>
@@ -62,6 +69,10 @@ const CategoriesDropdown = ({ data }) => {
       </Dropdown.Menu>
     </Dropdown>
   );
+};
+
+CategoriesDropdown.propTypes = {
+  data: propType(CATEGORIES_QUERY).isRequired
 };
 
 export default graphql(CATEGORIES_QUERY)(CategoriesDropdown);

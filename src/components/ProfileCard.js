@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import React from "react";
 import { Card } from "semantic-ui-react";
 import gql from "graphql-tag";
@@ -20,6 +21,12 @@ ProfileCard.fragments = {
       biography
     }
   `
+};
+
+ProfileCard.propTypes = {
+  fullName: PropTypes.string.isRequired,
+  username: PropTypes.string.isRequired,
+  biography: PropTypes.string.isRequired
 };
 
 export default ProfileCard;

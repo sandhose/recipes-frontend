@@ -2,6 +2,7 @@ import React from "react";
 import gql from "graphql-tag";
 import { Header, Card, Divider } from "semantic-ui-react";
 import { graphql } from "react-apollo";
+import { propType } from "graphql-anywhere";
 import { compose } from "recompose";
 
 import { renderWhileLoading, renderForError } from "../utils";
@@ -11,9 +12,9 @@ import CategoryCard from "../components/CategoryCard";
 const CATEGORY_QUERY = gql`
   query Category($id: Int!) {
     category: categoryById(id: $id) {
-      id,
-      name,
-      description,
+      id
+      name
+      description
       recipes {
         nodes {
           ...RecipeCard
@@ -56,6 +57,10 @@ const CategoryPage = ({ data: { category } }) => (
     ) : null}
   </React.Fragment>
 );
+
+CategoryPage.propTypes = {
+  data: propType(CATEGORY_QUERY).isRequired
+};
 
 export default compose(
   graphql(CATEGORY_QUERY, {

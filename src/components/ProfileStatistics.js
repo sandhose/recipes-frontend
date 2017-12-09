@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import React from "react";
 import { Statistic } from "semantic-ui-react";
 import gql from "graphql-tag";
@@ -28,6 +29,21 @@ ProfileStatistics.fragments = {
       }
     }
   `
+};
+
+ProfileStatistics.propTypes = {
+  recipes: PropTypes.shape({
+    totalCount: PropTypes.number.isRequired
+  }).isRequired,
+  fridge: PropTypes.shape({
+    totalCount: PropTypes.number.isRequired
+  }).isRequired,
+  plannings: PropTypes.shape({
+    totalCount: PropTypes.number.isRequired
+  }).isRequired,
+  shoppingLists: PropTypes.shape({
+    totalCount: PropTypes.number.isRequired
+  }).isRequired
 };
 
 export default ProfileStatistics;

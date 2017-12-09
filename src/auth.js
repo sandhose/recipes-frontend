@@ -11,10 +11,9 @@ export const authLink = setContext((_, { headers }) => {
         authorization: `Bearer ${token}`
       }
     };
-  } else {
-    return {};
   }
+  return {};
 });
 
 export const saveToken = token => localStorage.setItem(KEY, token);
-export const logout = token => localStorage.removeItem(KEY);
+export const logout = () => localStorage.removeItem(KEY);

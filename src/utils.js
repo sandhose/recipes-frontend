@@ -2,9 +2,10 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 import { graphql } from "react-apollo";
 import gql from "graphql-tag";
+import { compose, branch, renderComponent } from "recompose";
+
 import DefaultLoadingPlaceholder from "./components/DefaultLoadingPlaceholder";
 import DefaultErrorComponent from "./components/DefaultErrorComponent";
-import { compose, branch, renderComponent } from "recompose";
 
 export const renderWhileLoading = (
   component = DefaultLoadingPlaceholder,
@@ -34,7 +35,7 @@ export const needsLogin = compose(
   // FIXME: handle loading & errors
   branch(props => props.auth.loading || props.auth.error, () => () => null),
   branch(
-    props => props.auth && props.auth.authLevel == "ANONYMOUS",
+    props => props.auth && props.auth.authLevel === "ANONYMOUS",
     renderComponent(LoginRedirect)
   )
 );

@@ -1,8 +1,9 @@
+import PropTypes from "prop-types";
 import React, { Component } from "react";
 import gql from "graphql-tag";
 import { graphql, compose } from "react-apollo";
+import { propType } from "graphql-anywhere";
 import { Redirect } from "react-router-dom";
-
 import { Form, Card, Button, Message } from "semantic-ui-react";
 
 import { saveToken } from "../auth";
@@ -24,6 +25,11 @@ const PROFILE_QUERY = gql`
 `;
 
 class Login extends Component {
+  propTypes = {
+    data: propType(PROFILE_QUERY).isRequired,
+    login: PropTypes.func.isRequired
+  };
+
   state = {
     username: "",
     password: "",

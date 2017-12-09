@@ -1,10 +1,11 @@
+import PropTypes from "prop-types";
 import React from "react";
 import { Card, Label } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import gql from "graphql-tag";
 
 const RecipeCard = ({ id, name, description, serves, categories }) => (
-  <Card link as={Link} to={`/recipe/${id}`}>
+  <Card link as={Link} to={`/recipe/${id}`} key={id}>
     <Card.Content>
       <Card.Header>
         {categories.nodes.length !== 0 ? (
@@ -15,7 +16,8 @@ const RecipeCard = ({ id, name, description, serves, categories }) => (
       </Card.Header>
       <Card.Description>
         {/* TODO: fix line breaks */}
-        {description.split("\\n").map(c => <p>{c}</p>)}
+        {// eslint-disable-next-line react/no-array-index-key
+        description.split("\\n").map((c, i) => <p key={i}>{c}</p>)}
       </Card.Description>
     </Card.Content>
     {/* TODO: timers */}
@@ -36,6 +38,20 @@ RecipeCard.fragments = {
       }
     }
   `
+};
+
+RecipeCard.propTypes = {
+  id: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  serves: PropTypes.number.isRequired,
+  categories: PropTypes.shape({
+    nodes: PropTypes.arrayOf(
+      PropTypes.shape({
+        name: PropTypes.string.isRequired
+      })
+    ).isRequired
+  }).isRequired
 };
 
 export default RecipeCard;
