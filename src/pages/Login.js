@@ -1,12 +1,13 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import gql from "graphql-tag";
-import { graphql, compose } from "react-apollo";
-import { propType } from "graphql-anywhere";
+import ApolloClient from "apollo-client";
+import { graphql, compose, withApollo } from "react-apollo";
 import { Redirect } from "react-router-dom";
 import { Form, Card, Button, Message } from "semantic-ui-react";
 
-import { saveToken } from "../auth";
+import { saveToken, USER_LEVEL_QUERY, ANONYMOUS } from "../auth";
+import { renderForAuthLevel } from "../utils";
 
 const AUTHENTICATE_QUERY = gql`
   mutation login($username: String!, $password: String!) {
@@ -16,18 +17,10 @@ const AUTHENTICATE_QUERY = gql`
   }
 `;
 
-const PROFILE_QUERY = gql`
-  query {
-    me {
-      fullName
-    }
-  }
-`;
-
 class Login extends Component {
   propTypes = {
-    data: propType(PROFILE_QUERY).isRequired,
-    login: PropTypes.func.isRequired
+    login: PropTypes.func.isRequired,
+    client: PropTypes.instanceOf(ApolloClient).isRequired
   };
 
   state = {
@@ -53,14 +46,11 @@ class Login extends Component {
       this.setState({ error: "Invalid credentials" });
     } else {
       saveToken(data.authenticate.jwtToken);
+      this.props.client.resetStore();
     }
   };
 
   render() {
-    if (this.props.data.me) {
-      return <Redirect to="/me" />;
-    }
-
     const { username, password, error, loading } = this.state;
     return (
       <Card centered>
@@ -99,25 +89,14 @@ class Login extends Component {
 }
 
 export default compose(
-  graphql(PROFILE_QUERY),
+  renderForAuthLevel(level => level !== ANONYMOUS, () => <Redirect to="/me" />),
   graphql(AUTHENTICATE_QUERY, {
     props: ({ mutate }) => ({
       login: (username, password) =>
         mutate({
-          variables: { username, password },
-
-          refetchQueries: [
-            {
-              query: gql`
-                query {
-                  me {
-                    fullName
-                  }
-                }
-              `
-            }
-          ]
+          variables: { username, password }
         })
     })
-  })
+  }),
+  withApollo
 )(Login);

@@ -1,12 +1,11 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 import { graphql } from "react-apollo";
-import gql from "graphql-tag";
 import { compose, branch, renderComponent } from "recompose";
 
+import { ANONYMOUS, USER_LEVEL_QUERY } from "./auth";
 import DefaultLoadingPlaceholder from "./components/DefaultLoadingPlaceholder";
 import DefaultErrorComponent from "./components/DefaultErrorComponent";
-import { ANONYMOUS } from "./auth";
 
 export const renderWhileLoading = (
   component = DefaultLoadingPlaceholder,
@@ -23,15 +22,9 @@ export const renderForError = (
 ) =>
   branch(props => props[name] && props[name].error, renderComponent(component));
 
-const USER_LEVEL_QUERY = gql`
-  query {
-    authLevel
-  }
-`;
-
 // TODO: error handling
 export const renderForAuthLevel = (
-  level,
+  check,
   component,
   loadingComponent = () => null,
   errorComponent = () => null
@@ -41,11 +34,14 @@ export const renderForAuthLevel = (
     renderWhileLoading(loadingComponent, "auth"),
     renderForError(errorComponent, "auth"),
     branch(
-      props => props.auth && props.auth.authLevel === level,
+      props => props.auth && check(props.auth.authLevel),
       renderComponent(component)
     )
   );
 
 const LoginRedirect = () => <Redirect to="/login" />;
 
-export const needsLogin = renderForAuthLevel(ANONYMOUS, LoginRedirect);
+export const needsLogin = renderForAuthLevel(
+  level => level === ANONYMOUS,
+  LoginRedirect
+);

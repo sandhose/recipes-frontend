@@ -1,13 +1,18 @@
 import PropTypes from "prop-types";
-import ApolloClient from "apollo-client";
-import React, { Component } from "react";
+import React from "react";
 import { Menu } from "semantic-ui-react";
 import { NavLink } from "react-router-dom";
 import gql from "graphql-tag";
-import { graphql, withApollo, compose } from "react-apollo";
+import { graphql, withApollo } from "react-apollo";
 import { propType } from "graphql-anywhere";
+import { compose, withHandlers } from "recompose";
 
-import { logout } from "../auth";
+import { logout, ANONYMOUS } from "../auth";
+import {
+  renderForAuthLevel,
+  renderForError,
+  renderWhileLoading
+} from "../utils";
 
 const PROFILE_QUERY = gql`
   query {
@@ -17,51 +22,45 @@ const PROFILE_QUERY = gql`
   }
 `;
 
-class ProfileItem extends Component {
-  static propTypes = {
-    data: propType(PROFILE_QUERY).isRequired,
-    client: PropTypes.instanceOf(ApolloClient).isRequired
-  };
+const ProfileItem = ({ data: { me }, onLogout }) => (
+  <React.Fragment>
+    <Menu.Item as={NavLink} to="/me">
+      {me.fullName}
+    </Menu.Item>
+    <Menu.Item link onClick={onLogout}>
+      Logout
+    </Menu.Item>
+  </React.Fragment>
+);
 
-  logout = () => {
-    logout();
-    this.props.client.resetStore();
-  };
+ProfileItem.propTypes = {
+  data: propType(PROFILE_QUERY).isRequired,
+  onLogout: PropTypes.func.isRequired
+};
 
-  render() {
-    const { loading, error, me } = this.props.data;
+const LoginItem = () => (
+  <React.Fragment>
+    <Menu.Item as={NavLink} to="/login">
+      Log-in
+    </Menu.Item>
+    <Menu.Item as={NavLink} to="/signup">
+      Sign-up
+    </Menu.Item>
+  </React.Fragment>
+);
 
-    if (loading) {
-      return <Menu.Item disabled>Loading…</Menu.Item>;
+export default compose(
+  renderForAuthLevel(level => level === ANONYMOUS, LoginItem),
+  graphql(PROFILE_QUERY),
+  withApollo,
+  withHandlers({
+    onLogout: ({ client }) => () => {
+      logout();
+      client.resetStore();
+      // FIXME: hack because the store resets weirdly
+      window.location.reload();
     }
-
-    if (error) {
-      return <Menu.Item error>Error.</Menu.Item>;
-    }
-
-    if (me) {
-      return (
-        <React.Fragment>
-          <Menu.Item as={NavLink} to="/me">
-            {me.fullName}
-          </Menu.Item>
-          <Menu.Item link onClick={this.logout}>
-            Logout
-          </Menu.Item>
-        </React.Fragment>
-      );
-    }
-    return (
-      <React.Fragment>
-        <Menu.Item as={NavLink} to="/login">
-          Log-in
-        </Menu.Item>
-        <Menu.Item as={NavLink} to="/signup">
-          Sign-up
-        </Menu.Item>
-      </React.Fragment>
-    );
-  }
-}
-
-export default compose(graphql(PROFILE_QUERY), withApollo)(ProfileItem);
+  }),
+  renderWhileLoading(() => <Menu.Item disabled>Loading…</Menu.Item>),
+  renderForError(() => <Menu.Item error>Error.</Menu.Item>)
+)(ProfileItem);
