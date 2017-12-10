@@ -6,6 +6,7 @@ import { compose, branch, renderComponent } from "recompose";
 
 import DefaultLoadingPlaceholder from "./components/DefaultLoadingPlaceholder";
 import DefaultErrorComponent from "./components/DefaultErrorComponent";
+import { ANONYMOUS } from "./auth";
 
 export const renderWhileLoading = (
   component = DefaultLoadingPlaceholder,
@@ -28,14 +29,23 @@ const USER_LEVEL_QUERY = gql`
   }
 `;
 
+// TODO: error handling
+export const renderForAuthLevel = (
+  level,
+  component,
+  loadingComponent = () => null,
+  errorComponent = () => null
+) =>
+  compose(
+    graphql(USER_LEVEL_QUERY, { name: "auth" }),
+    renderWhileLoading(loadingComponent, "auth"),
+    renderForError(errorComponent, "auth"),
+    branch(
+      props => props.auth && props.auth.authLevel === level,
+      renderComponent(component)
+    )
+  );
+
 const LoginRedirect = () => <Redirect to="/login" />;
 
-export const needsLogin = compose(
-  graphql(USER_LEVEL_QUERY, { name: "auth" }),
-  // FIXME: handle loading & errors
-  branch(props => props.auth.loading || props.auth.error, () => () => null),
-  branch(
-    props => props.auth && props.auth.authLevel === "ANONYMOUS",
-    renderComponent(LoginRedirect)
-  )
-);
+export const needsLogin = renderForAuthLevel(ANONYMOUS, LoginRedirect);
