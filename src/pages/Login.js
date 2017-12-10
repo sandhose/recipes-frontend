@@ -4,9 +4,16 @@ import gql from "graphql-tag";
 import ApolloClient from "apollo-client";
 import { graphql, compose, withApollo } from "react-apollo";
 import { Redirect } from "react-router-dom";
-import { Form, Card, Button, Message } from "semantic-ui-react";
+import {
+  Form,
+  Grid,
+  Segment,
+  Header,
+  Button,
+  Message
+} from "semantic-ui-react";
 
-import { saveToken, USER_LEVEL_QUERY, ANONYMOUS } from "../auth";
+import { saveToken, ANONYMOUS } from "../auth";
 import { renderForAuthLevel } from "../utils";
 
 const AUTHENTICATE_QUERY = gql`
@@ -36,14 +43,13 @@ class Login extends Component {
     const { username, password } = this.state;
     this.setState({ loading: true });
     const { data, error } = await this.props.login(username, password);
-    this.setState({ loading: false });
 
     if (error) {
-      this.setState({ error });
+      this.setState({ error, loading: false });
     }
 
     if (!data.authenticate.jwtToken) {
-      this.setState({ error: "Invalid credentials" });
+      this.setState({ error: "Invalid credentials", loading: false });
     } else {
       saveToken(data.authenticate.jwtToken);
       this.props.client.resetStore();
@@ -53,37 +59,51 @@ class Login extends Component {
   render() {
     const { username, password, error, loading } = this.state;
     return (
-      <Card centered>
-        <Card.Content>
-          <Card.Header>Login</Card.Header>
-          <Card.Meta>
+      <Grid
+        centered
+        verticalAlign="middle"
+        style={{
+          minHeight: "calc(100vh - 150px)"
+        }}
+      >
+        <Grid.Column style={{ maxWidth: 300 }} textAlign="center">
+          <Header as="h2">Login</Header>
+          <Header.Subheader>
             Tip: use <code>afranke</code> / <code>afranke</code>
-          </Card.Meta>
-        </Card.Content>
-        <Card.Content>
-          <Form onSubmit={this.handleSubmit} loading={loading} error={!!error}>
-            {error ? (
-              <Message error header="Can't log in" content={error} />
-            ) : null}
-            <Form.Input
-              label="Username"
-              name="username"
-              value={username}
-              onChange={this.handleChange}
-            />
-            <Form.Input
-              label="Password"
-              name="password"
-              value={password}
-              onChange={this.handleChange}
-              type="password"
-            />
-            <Button type="submit" primary floated="right">
-              Login
-            </Button>
-          </Form>
-        </Card.Content>
-      </Card>
+          </Header.Subheader>
+          <Segment stacked>
+            <Form
+              onSubmit={this.handleSubmit}
+              loading={loading}
+              error={!!error}
+            >
+              {error ? (
+                <Message error header="Can't log in" content={error} />
+              ) : null}
+              <Form.Input
+                placeholder="Username"
+                icon="user"
+                iconPosition="left"
+                name="username"
+                value={username}
+                onChange={this.handleChange}
+              />
+              <Form.Input
+                placeholder="Password"
+                icon="lock"
+                iconPosition="left"
+                name="password"
+                value={password}
+                onChange={this.handleChange}
+                type="password"
+              />
+              <Button type="submit" primary fluid size="big">
+                Login
+              </Button>
+            </Form>
+          </Segment>
+        </Grid.Column>
+      </Grid>
     );
   }
 }

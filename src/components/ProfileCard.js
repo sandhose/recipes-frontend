@@ -4,7 +4,7 @@ import { Card } from "semantic-ui-react";
 import gql from "graphql-tag";
 
 const ProfileCard = ({ fullName, username, biography }) => (
-  <Card>
+  <Card fluid>
     <Card.Content>
       <Card.Header>{fullName}</Card.Header>
       <Card.Meta>{username}</Card.Meta>

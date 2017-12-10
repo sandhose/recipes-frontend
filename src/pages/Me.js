@@ -30,8 +30,8 @@ const PROFILE_QUERY = gql`
 `;
 
 const Me = ({ data: { me } }) => (
-  <Grid>
-    <Grid.Column width={4}>
+  <Grid stackable>
+    <Grid.Column computer={4} tablet={6}>
       <ProfileCard {...me} />
     </Grid.Column>
 
