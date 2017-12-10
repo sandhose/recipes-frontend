@@ -8,7 +8,9 @@ const ProfileCard = ({ fullName, username, biography }) => (
     <Card.Content>
       <Card.Header>{fullName}</Card.Header>
       <Card.Meta>{username}</Card.Meta>
-      <Card.Description>{biography}</Card.Description>
+      <Card.Description>
+        {biography.split("\\n").map((p, i) => <p key={i}>{p}</p>)}
+      </Card.Description>
     </Card.Content>
   </Card>
 );

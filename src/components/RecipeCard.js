@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import gql from "graphql-tag";
 
 const RecipeCard = ({ id, name, description, serves, categories }) => (
-  <Card link as={Link} to={`/recipe/${id}`} key={id}>
+  <Card link as={Link} to={`/recipes/${id}`} key={id}>
     <Card.Content>
       <Card.Header>
         {categories.nodes.length !== 0 ? (

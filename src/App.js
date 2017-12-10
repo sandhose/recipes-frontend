@@ -6,6 +6,7 @@ import Header from "./layout/Header";
 import Login from "./pages/Login";
 import Category from "./pages/Category";
 import Me from "./pages/Me";
+import Recipe from "./pages/Recipe";
 
 const Home = () => <div>Hey.</div>;
 
@@ -17,6 +18,7 @@ const App = () => (
         <Route path="/login" component={Login} />
         <Route path="/me" component={Me} />
         <Route path="/categories/:id" component={Category} />
+        <Route path="/recipes/:id" component={Recipe} />
         <Route path="/" component={Home} />
       </Switch>
     </Container>
