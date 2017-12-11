@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { Link } from "react-router-dom";
-import { Dropdown, Label } from "semantic-ui-react";
+import { Dropdown, Label, Menu } from "semantic-ui-react";
 import gql from "graphql-tag";
 import { propType } from "graphql-anywhere";
 import { graphql } from "react-apollo";
@@ -44,32 +44,17 @@ SubcategoryItem.propTypes = {
   }).isRequired
 };
 
-const CategoriesLoading = () => (
-  <Dropdown item pointing loading open={false} text="Categories" />
-);
+const CategoriesLoading = () => <Menu.Item disabled>Loading… </Menu.Item>;
 
-const CategoriesError = () => (
-  <Dropdown item pointing error open={false} text="Categories" />
-);
+const CategoriesError = () => <Menu.Item error>Error.</Menu.Item>;
 
-// FIXME: submenu
-const CategoriesDropdown = ({ data: { rootCategories } }) => (
-  <Dropdown item pointing text="Categories">
-    <Dropdown.Menu>
-      {rootCategories &&
-        rootCategories.nodes.map(({ id, name, children }) => (
-          <Dropdown.Item key={id}>
-            {name}
-            <Dropdown>
-              <Dropdown.Menu>
-                {children.nodes.map(SubcategoryItem)}
-              </Dropdown.Menu>
-            </Dropdown>
-          </Dropdown.Item>
-        ))}
-    </Dropdown.Menu>
-  </Dropdown>
-);
+const CategoriesDropdown = ({ data: { rootCategories } }) =>
+  rootCategories &&
+  rootCategories.nodes.map(({ id, name, children }) => (
+    <Dropdown key={id} item pointing text={name}>
+      <Dropdown.Menu>{children.nodes.map(SubcategoryItem)}</Dropdown.Menu>
+    </Dropdown>
+  ));
 
 CategoriesDropdown.propTypes = {
   data: propType(CATEGORIES_QUERY).isRequired

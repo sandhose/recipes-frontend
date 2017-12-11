@@ -63,7 +63,7 @@ const RecipePage = ({
 }) => (
   <Grid>
     <Grid.Row>
-      <Grid.Column centered>
+      <Grid.Column>
         <Header as="h1" textAlign="center" icon>
           <Icon name="food" circular />
           {name}
