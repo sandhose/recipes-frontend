@@ -7,6 +7,7 @@ import { ApolloProvider } from "react-apollo";
 
 import { authLink } from "./auth";
 import App from "./App";
+import { createFlashStore, FlashProvider } from "./flash";
 
 const httpLink = new HttpLink({
   uri: "/graphql"
@@ -17,11 +18,15 @@ const client = new ApolloClient({
   cache: new InMemoryCache().restore({})
 });
 
+const flashStore = createFlashStore();
+
 const render = NextApp => {
   ReactDOM.render(
     <BrowserRouter>
       <ApolloProvider client={client}>
-        <NextApp />
+        <FlashProvider store={flashStore}>
+          <NextApp />
+        </FlashProvider>
       </ApolloProvider>
     </BrowserRouter>,
     document.getElementById("root")

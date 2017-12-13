@@ -3,6 +3,7 @@ import { Redirect } from "react-router-dom";
 import { graphql } from "react-apollo";
 import { compose, branch, renderComponent } from "recompose";
 
+import { Flash } from "./flash";
 import { ANONYMOUS, USER_LEVEL_QUERY } from "./auth";
 import DefaultLoadingPlaceholder from "./components/DefaultLoadingPlaceholder";
 import DefaultErrorComponent from "./components/DefaultErrorComponent";
@@ -39,7 +40,12 @@ export const renderForAuthLevel = (
     )
   );
 
-const LoginRedirect = () => <Redirect to="/login" />;
+const LoginRedirect = () => (
+  <React.Fragment>
+    <Flash message="You must be logged in to see this page" />
+    <Redirect to="/login" />
+  </React.Fragment>
+);
 
 export const needsLogin = renderForAuthLevel(
   level => level === ANONYMOUS,

@@ -25,7 +25,7 @@ const AUTHENTICATE_QUERY = gql`
 `;
 
 class Login extends Component {
-  propTypes = {
+  static propTypes = {
     login: PropTypes.func.isRequired,
     client: PropTypes.instanceOf(ApolloClient).isRequired
   };

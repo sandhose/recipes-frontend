@@ -2,6 +2,7 @@ import React from "react";
 import { Route, Switch } from "react-router";
 import { Container } from "semantic-ui-react";
 
+import { FlashStream } from "./flash";
 import Header from "./layout/Header";
 import Login from "./pages/Login";
 import Category from "./pages/Category";
@@ -14,6 +15,7 @@ const App = () => (
   <React.Fragment>
     <Header />
     <Container>
+      <FlashStream />
       <Switch>
         <Route path="/login" component={Login} />
         <Route path="/me" component={Me} />
