@@ -7,7 +7,7 @@ import ProfileItem from "./ProfileItem";
 
 const Header = () => (
   <Menu pointing secondary>
-    <Menu.Item as={NavLink} to="/me" exact header>
+    <Menu.Item as={NavLink} to="/" exact header>
       Recipes.
     </Menu.Item>
     <CategoriesDropdown />
