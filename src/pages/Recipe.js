@@ -10,13 +10,9 @@ import { renderWhileLoading, renderForError } from "../utils";
 import ProfileCard from "../components/ProfileCard";
 import IngredientList from "../components/IngredientList";
 import Media from "../components/Media";
+import Step from "../components/Step";
 
 const RECIPE_QUERY = gql`
-  fragment StepCard on Step {
-    id
-    description
-  }
-
   query Recipe($id: Int!) {
     recipe: recipeById(id: $id) {
       name
@@ -38,7 +34,7 @@ const RECIPE_QUERY = gql`
       }
       steps: stepsByRecipeId(orderBy: POSITION_ASC) {
         nodes {
-          ...StepCard
+          ...Step
         }
       }
     }
@@ -47,14 +43,11 @@ const RECIPE_QUERY = gql`
   ${ProfileCard.fragments.entry}
   ${IngredientList.fragments.entry}
   ${Media.fragments.entry}
+  ${Step.fragments.entry}
 `;
 
 const StepList = ({ steps }) => (
-  <Segment.Group>
-    {steps.map(({ id, description }) => (
-      <Segment key={id}>{description}</Segment>
-    ))}
-  </Segment.Group>
+  <Segment.Group>{steps.map(Step)}</Segment.Group>
 );
 
 StepList.propTypes = {
