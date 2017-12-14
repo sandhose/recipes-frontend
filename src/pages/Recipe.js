@@ -11,6 +11,7 @@ import ProfileCard from "../components/ProfileCard";
 import IngredientList from "../components/IngredientList";
 import Media from "../components/Media";
 import StepList from "../components/StepList";
+import Timer from "../components/Timer";
 
 const RECIPE_QUERY = gql`
   query Recipe($id: Int!) {
@@ -32,9 +33,15 @@ const RECIPE_QUERY = gql`
           ...IngredientCard
         }
       }
-      steps: stepsByRecipeId(orderBy: POSITION_ASC) {
+      steps {
         nodes {
           ...Step
+        }
+      }
+      timers {
+        nodes {
+          id
+          ...Timer
         }
       }
     }
@@ -44,6 +51,7 @@ const RECIPE_QUERY = gql`
   ${IngredientList.fragments.entry}
   ${Media.fragments.entry}
   ${StepList.fragments.entry}
+  ${Timer.fragments.entry}
 `;
 
 const BackgroundImage = ({ file }) => (
@@ -69,30 +77,44 @@ BackgroundImage.propTypes = {
 
 const RecipePage = ({
   data: {
-    recipe: { name, description, steps, ingredients, serves, author, medias }
+    recipe: {
+      name,
+      description,
+      steps,
+      ingredients,
+      serves,
+      author,
+      medias,
+      timers
+    }
   }
 }) => (
   <Grid>
     <Grid.Row>
       <Grid.Column>
-        <Segment inverted size="massive">
-          <Header
-            as="h1"
-            textAlign="center"
+        <Segment inverted>
+          <div
             style={{
-              maxWidth: 400,
+              maxWidth: 600,
+              textAlign: "center",
               position: "relative",
-              zIndex: 1
+              zIndex: 1,
+              margin: "auto"
             }}
-            inverted
-            icon
           >
-            <Icon name="food" inverted circular />
-            {name}
-            {description
-              .split("\\n")
-              .map((d, i) => <Header.Subheader key={i}>{d}</Header.Subheader>)}
-          </Header>
+            <Header as="h1" inverted icon>
+              <Icon name="food" inverted circular />
+              {name}
+              {description
+                .split("\\n")
+                .map((d, i) => (
+                  <Header.Subheader key={i}>{d}</Header.Subheader>
+                ))}
+            </Header>
+            {timers.nodes.map(({ id, ...props }) => (
+              <Timer key={id} {...props} />
+            ))}
+          </div>
           {medias.nodes[0] && <BackgroundImage file={medias.nodes[0].file} />}
         </Segment>
       </Grid.Column>

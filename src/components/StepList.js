@@ -4,6 +4,7 @@ import gql from "graphql-tag";
 import { Segment, Grid } from "semantic-ui-react";
 
 import Media from "./Media";
+import Timer from "./Timer";
 
 const attached = (index, steps) => {
   if (index === 0) return "top";
@@ -33,6 +34,7 @@ const StepList = ({ steps }) => (
           {step.media && (
             <Media {...step.media} style={{ paddingBottom: "1em" }} />
           )}
+          {step.timer && <Timer {...step.timer} />}
         </Grid.Column>
       </Grid.Row>
     ))}
@@ -56,9 +58,13 @@ StepList.fragments = {
       media {
         ...Media
       }
+      timer {
+        ...Timer
+      }
     }
 
     ${Media.fragments.entry}
+    ${Timer.fragments.entry}
   `
 };
 
