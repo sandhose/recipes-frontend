@@ -4,13 +4,13 @@ import gql from "graphql-tag";
 import { graphql } from "react-apollo";
 import { propType } from "graphql-anywhere";
 import { compose } from "recompose";
-import { Grid, Image, Header, Icon, Segment } from "semantic-ui-react";
+import { Grid, Header, Icon, Segment } from "semantic-ui-react";
 
 import { renderWhileLoading, renderForError } from "../utils";
 import ProfileCard from "../components/ProfileCard";
 import IngredientList from "../components/IngredientList";
 import Media from "../components/Media";
-import Step from "../components/Step";
+import StepList from "../components/StepList";
 
 const RECIPE_QUERY = gql`
   query Recipe($id: Int!) {
@@ -43,21 +43,8 @@ const RECIPE_QUERY = gql`
   ${ProfileCard.fragments.entry}
   ${IngredientList.fragments.entry}
   ${Media.fragments.entry}
-  ${Step.fragments.entry}
+  ${StepList.fragments.entry}
 `;
-
-const StepList = ({ steps }) => (
-  <Segment.Group>{steps.map(Step)}</Segment.Group>
-);
-
-StepList.propTypes = {
-  steps: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      description: PropTypes.string.isRequired
-    })
-  ).isRequired
-};
 
 const BackgroundImage = ({ file }) => (
   <div
@@ -116,12 +103,17 @@ const RecipePage = ({
         <ProfileCard {...author} />
       </Grid.Column>
       <Grid.Column width={12}>
-        <StepList steps={steps.nodes} />
-        <Image.Group size="small">
-          {medias.nodes.map(media => (
-            <Media rounded {...media} key={media.hash} />
-          ))}
-        </Image.Group>
+        <Grid>
+          <StepList steps={steps.nodes} />
+          <Header as="h2">All images</Header>
+          <Grid.Row>
+            {medias.nodes.map(media => (
+              <Grid.Column key={media.hash} width={4}>
+                <Media rounded {...media} />
+              </Grid.Column>
+            ))}
+          </Grid.Row>
+        </Grid>
       </Grid.Column>
     </Grid.Row>
   </Grid>
