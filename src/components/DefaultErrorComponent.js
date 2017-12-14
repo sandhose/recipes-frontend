@@ -7,7 +7,7 @@ const DefaultErrorComponent = ({ error }) => (
   <Dimmer active>
     <Header icon inverted>
       <Icon name="life ring" />
-      {error.message}
+      {error && error.message}
     </Header>
   </Dimmer>
 );

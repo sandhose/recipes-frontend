@@ -18,10 +18,13 @@ export const renderWhileLoading = (
   );
 
 export const renderForError = (
-  component = DefaultErrorComponent,
+  ErrorComponent = DefaultErrorComponent,
   name = "data"
 ) =>
-  branch(props => props[name] && props[name].error, renderComponent(component));
+  branch(
+    props => props[name] && props[name].error,
+    renderComponent(props => <ErrorComponent {...props[name]} />)
+  );
 
 // TODO: error handling
 export const renderForAuthLevel = (

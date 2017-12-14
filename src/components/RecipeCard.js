@@ -31,7 +31,7 @@ RecipeCard.fragments = {
       name
       description
       serves
-      categories: cat(first: 1) {
+      categories(first: 1) {
         nodes {
           name
         }
