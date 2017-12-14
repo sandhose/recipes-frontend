@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import React from "react";
 import gql from "graphql-tag";
 import { graphql } from "react-apollo";
@@ -72,11 +71,13 @@ const RecipePage = ({
         />
       </Grid.Column>
     </Grid.Row>
+
     <Grid.Row>
       <Grid.Column width={4}>
         <IngredientList ingredients={ingredients} serves={serves} />
         <ProfileCard {...author} />
       </Grid.Column>
+
       <Grid.Column width={12}>
         <Grid>
           <StepList steps={steps.nodes} />
