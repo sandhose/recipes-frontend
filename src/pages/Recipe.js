@@ -4,28 +4,27 @@ import gql from "graphql-tag";
 import { graphql } from "react-apollo";
 import { propType } from "graphql-anywhere";
 import { compose } from "recompose";
-import { Grid, Header, Icon, Segment } from "semantic-ui-react";
+import { Grid, Header } from "semantic-ui-react";
 
 import { renderWhileLoading, renderForError } from "../utils";
 import ProfileCard from "../components/ProfileCard";
 import IngredientList from "../components/IngredientList";
 import Media from "../components/Media";
 import StepList from "../components/StepList";
-import Timer from "../components/Timer";
+import RecipeHeader from "../components/RecipeHeader";
 
 const RECIPE_QUERY = gql`
   query Recipe($id: Int!) {
     recipe: recipeById(id: $id) {
-      name
-      description
       serves
-      medias: media {
+      ...RecipeHeader
+      medias {
         nodes {
           ...Media
           hash
         }
       }
-      author: profileByAuthorId {
+      author {
         ...ProfileCard
       }
       ingredients {
@@ -38,12 +37,6 @@ const RECIPE_QUERY = gql`
           ...Step
         }
       }
-      timers {
-        nodes {
-          id
-          ...Timer
-        }
-      }
     }
   }
 
@@ -51,29 +44,8 @@ const RECIPE_QUERY = gql`
   ${IngredientList.fragments.entry}
   ${Media.fragments.entry}
   ${StepList.fragments.entry}
-  ${Timer.fragments.entry}
+  ${RecipeHeader.fragments.entry}
 `;
-
-const BackgroundImage = ({ file }) => (
-  <div
-    style={{
-      position: "absolute",
-      zIndex: 0,
-      top: 0,
-      bottom: 0,
-      left: 0,
-      right: 0,
-      opacity: 0.5,
-      backgroundImage: `url('/media/${file}')`,
-      backgroundPosition: "center center",
-      backgroundSize: "cover"
-    }}
-  />
-);
-
-BackgroundImage.propTypes = {
-  file: PropTypes.string.isRequired
-};
 
 const RecipePage = ({
   data: {
@@ -92,31 +64,12 @@ const RecipePage = ({
   <Grid>
     <Grid.Row>
       <Grid.Column>
-        <Segment inverted>
-          <div
-            style={{
-              maxWidth: 600,
-              textAlign: "center",
-              position: "relative",
-              zIndex: 1,
-              margin: "auto"
-            }}
-          >
-            <Header as="h1" inverted icon>
-              <Icon name="food" inverted circular />
-              {name}
-              {description
-                .split("\\n")
-                .map((d, i) => (
-                  <Header.Subheader key={i}>{d}</Header.Subheader>
-                ))}
-            </Header>
-            {timers.nodes.map(({ id, ...props }) => (
-              <Timer key={id} {...props} />
-            ))}
-          </div>
-          {medias.nodes[0] && <BackgroundImage file={medias.nodes[0].file} />}
-        </Segment>
+        <RecipeHeader
+          name={name}
+          description={description}
+          timers={timers}
+          media={medias.nodes[0]}
+        />
       </Grid.Column>
     </Grid.Row>
     <Grid.Row>

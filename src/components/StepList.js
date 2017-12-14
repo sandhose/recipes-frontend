@@ -7,12 +7,14 @@ import Media from "./Media";
 import Timer from "./Timer";
 
 const attached = (index, steps) => {
-  if (index === 0) return "top";
+  if (index === 0 && index === steps.length - 1) return false;
+  else if (index === 0) return "top";
   else if (index === steps.length - 1) return "bottom";
   return true;
 };
 
 const pad = (index, steps) => {
+  if (index === 0 && index === steps.length - 1) return {};
   if (index === 0) return { paddingBottom: 0 };
   else if (index === steps.length - 1) return { paddingTop: 0 };
   return { padding: 0 };
@@ -30,7 +32,7 @@ const StepList = ({ steps }) => (
             {step.description}
           </Segment>
         </Grid.Column>
-        <Grid.Column width={4}>
+        <Grid.Column width={4} verticalAlign="middle">
           {step.media && (
             <Media {...step.media} style={{ paddingBottom: "1em" }} />
           )}

@@ -33,10 +33,16 @@ Timer.fragments = {
   `
 };
 
+Timer.defaultProps = {
+  type: null,
+  timeMin: null,
+  timeMax: null
+};
+
 Timer.propTypes = {
-  type: PropTypes.string.isRequired,
-  timeMin: PropTypes.number.isRequired,
-  timeMax: PropTypes.number.isRequired
+  type: PropTypes.string,
+  timeMin: PropTypes.number,
+  timeMax: PropTypes.number
 };
 
 export default Timer;
