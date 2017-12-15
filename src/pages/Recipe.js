@@ -85,7 +85,7 @@ const RecipePage = ({
           <Grid.Row>
             {medias.nodes.map(media => (
               <Grid.Column key={media.hash} width={4}>
-                <Media rounded {...media} />
+                <Media style={{ marginBottom: "1em" }} rounded {...media} />
               </Grid.Column>
             ))}
           </Grid.Row>

@@ -3,6 +3,7 @@ import React from "react";
 import { Card } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import gql from "graphql-tag";
+import Markdown from "react-markdown";
 
 import Media from "./Media";
 
@@ -21,9 +22,7 @@ const RecipeCard = ({ id, name, description, serves, categories, medias }) => (
         {serves} servings • {categories.nodes[0].name}
       </Card.Meta>
       <Card.Description>
-        {/* TODO: fix line breaks */}
-        {// eslint-disable-next-line react/no-array-index-key
-        description.split("\\n").map((c, i) => <p key={i}>{c}</p>)}
+        <Markdown source={description.replace(/\\n/g, "\n\n")} />
       </Card.Description>
     </Card.Content>
     {/* TODO: timers */}

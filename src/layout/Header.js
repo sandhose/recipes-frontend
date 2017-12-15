@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { Menu } from "semantic-ui-react";
+import { Menu, Icon } from "semantic-ui-react";
 
 import CategoriesDropdown from "./CategoriesDropdown";
 import ProfileItem from "./ProfileItem";
@@ -8,6 +8,7 @@ import ProfileItem from "./ProfileItem";
 const Header = () => (
   <Menu pointing secondary>
     <Menu.Item as={NavLink} to="/" exact header>
+      <Icon name="food" />
       Recipes.
     </Menu.Item>
     <CategoriesDropdown />

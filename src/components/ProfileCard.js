@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { Card } from "semantic-ui-react";
 import gql from "graphql-tag";
+import Markdown from "react-markdown";
 
 import Media from "./Media";
 
@@ -12,7 +13,7 @@ const ProfileCard = ({ fullName, username, biography, picture }) => (
       <Card.Header>{fullName}</Card.Header>
       <Card.Meta>{username}</Card.Meta>
       <Card.Description>
-        {biography.split("\\n").map((p, i) => <p key={i}>{p}</p>)}
+        <Markdown source={biography.replace(/\\n/g, "\n\n")} />
       </Card.Description>
     </Card.Content>
   </Card>

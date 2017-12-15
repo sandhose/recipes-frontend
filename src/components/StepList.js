@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import gql from "graphql-tag";
 import { Segment, Grid } from "semantic-ui-react";
+import Markdown from "react-markdown";
 
 import Media from "./Media";
 import Timer from "./Timer";
@@ -29,7 +30,7 @@ const StepList = ({ steps }) => (
       >
         <Grid.Column width={12} stretched>
           <Segment attached={attached(index, steps)}>
-            {step.description}
+            <Markdown source={step.description} />
           </Segment>
         </Grid.Column>
         <Grid.Column width={4} verticalAlign="middle">

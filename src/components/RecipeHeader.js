@@ -1,7 +1,8 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { Header, Icon, Segment } from "semantic-ui-react";
+import { Header, Icon, Segment, Divider } from "semantic-ui-react";
 import gql from "graphql-tag";
+import Markdown from "react-markdown";
 
 import Timer from "./Timer";
 
@@ -34,17 +35,26 @@ const RecipeHeader = ({ name, description, timers, media }) => (
         textAlign: "center",
         position: "relative",
         zIndex: 1,
-        margin: "auto"
+        margin: "auto",
+        textShadow: "0 0 20px black",
+        color: "white"
       }}
     >
       <Header as="h1" inverted icon>
         <Icon name="food" inverted circular />
         {name}
-        {description
-          .split("\\n")
-          .map((d, i) => <Header.Subheader key={i}>{d}</Header.Subheader>)}
+        <Header.Subheader>
+          <Markdown source={description.replace(/\\n/g, "\n\n")} />
+        </Header.Subheader>
       </Header>
-      {timers.nodes.map(({ id, ...props }) => <Timer key={id} {...props} />)}
+      {timers.totalCount && (
+        <React.Fragment>
+          <Divider />
+          {timers.nodes.map(({ id, ...props }) => (
+            <Timer key={id} {...props} />
+          ))}
+        </React.Fragment>
+      )}
     </div>
     {media && <BackgroundImage file={media.file} />}
   </Segment>
@@ -56,6 +66,7 @@ RecipeHeader.fragments = {
       name
       description
       timers {
+        totalCount
         nodes {
           id
           ...Timer
@@ -71,6 +82,7 @@ RecipeHeader.propTypes = {
   name: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   timers: PropTypes.shape({
+    totalCount: PropTypes.number.isRequired,
     nodes: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.number.isRequired,
