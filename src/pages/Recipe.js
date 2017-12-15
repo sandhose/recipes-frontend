@@ -60,7 +60,7 @@ const RecipePage = ({
     }
   }
 }) => (
-  <Grid>
+  <Grid stackable>
     <Grid.Row>
       <Grid.Column>
         <RecipeHeader
@@ -79,7 +79,7 @@ const RecipePage = ({
       </Grid.Column>
 
       <Grid.Column width={12}>
-        <Grid>
+        <Grid stackable>
           <StepList steps={steps.nodes} />
           <Header as="h2">All images</Header>
           <Grid.Row>

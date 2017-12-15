@@ -26,7 +26,7 @@ const IngredientList = ({ ingredients, serves, inputValue, handler }) => (
       />
       servings
     </Header>
-    <Table size="small" basic="very" compact>
+    <Table size="small" basic="very" compact unstackable>
       <Table.Body>
         {ingredients.nodes.map(({ id, name, quantity, unit }) => (
           <Table.Row key={id}>
