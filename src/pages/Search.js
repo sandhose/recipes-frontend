@@ -56,13 +56,10 @@ const enhance = mapPropsStreamWithConfig(rxjsConfig)(props$ => {
   const stream$ = stream.startWith("cake");
   const search$ = stream$.debounceTime(200).startWith("");
 
-  const s = props$
-    .map(props => ({ ...props, change: e => handler(e.targer.value) }))
+  return props$
+    .map(props => ({ ...props, change: e => handler(e.target.value) }))
     .combineLatest(stream$, (props, value) => ({ ...props, value }))
     .combineLatest(search$, (props, search) => ({ ...props, search }));
-
-  s.subscribe({ next: c => console.log(c) });
-  return s;
 });
 
 export default compose(

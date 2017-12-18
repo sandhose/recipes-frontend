@@ -12,9 +12,11 @@ const ProfileCard = ({ fullName, username, biography, picture }) => (
     <Card.Content>
       <Card.Header>{fullName}</Card.Header>
       <Card.Meta>{username}</Card.Meta>
-      <Card.Description>
-        <Markdown source={biography.replace(/\\n/g, "\n\n")} />
-      </Card.Description>
+      {biography && (
+        <Card.Description>
+          <Markdown source={biography.replace(/\\n/g, "\n\n")} />
+        </Card.Description>
+      )}
     </Card.Content>
   </Card>
 );

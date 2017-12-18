@@ -5,6 +5,7 @@ import { Container } from "semantic-ui-react";
 import { FlashStream } from "./flash";
 import Header from "./layout/Header";
 import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import Category from "./pages/Category";
 import Me from "./pages/Me";
 import Recipe from "./pages/Recipe";
@@ -17,6 +18,7 @@ const App = () => (
       <FlashStream />
       <Switch>
         <Route path="/login" component={Login} />
+        <Route path="/signup" component={Signup} />
         <Route path="/me" component={Me} />
         <Route path="/categories/:id" component={Category} />
         <Route path="/recipes/:id" component={Recipe} />
